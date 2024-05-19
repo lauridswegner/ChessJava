@@ -40,7 +40,7 @@ public class Piece {
         return true;
     }
 
-    public boolean moveCollideWithPiece(int col, int row) {
+    public boolean moveCollidesWithPiece(int col, int row) {
         return false;
     }
 
