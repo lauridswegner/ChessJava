@@ -15,9 +15,61 @@ public class Board extends JPanel {
 
     ArrayList<Piece> pieceList = new ArrayList<>();
 
+    public Piece selectedPiece;
+
+    Input input = new Input(this);
+
     public Board() {
         this.setPreferredSize(new Dimension(cols * tileSize, rows * tileSize));
+
+        this.addMouseListener(input);
+        this.addMouseMotionListener(input);
+
         addPieces();
+    }
+
+    public Piece getPiece (int col, int row) {
+
+        for (Piece piece : pieceList) {
+            if (piece.col == col && piece.row == row) {
+                return piece;
+            }
+        }
+
+        return null;
+
+    }
+
+    public void makeMove (Move move) {
+
+        move.piece.col = move.newCol;
+        move.piece.row = move.newRow;
+        move.piece.xPos = move.newCol * tileSize;
+        move.piece.yPos = move.newRow * tileSize;
+
+        capture(move);
+    }
+
+    public void capture (Move move) {
+        pieceList.remove(move.capture);
+    }
+
+    public boolean isValidMove(Move move) {
+
+        if(sameTeam(move.piece, move.capture)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean sameTeam(Piece p1, Piece p2) {
+
+        if (p1 == null || p2 == null) {
+            return false;
+        }
+        return p1.isWhite == p2.isWhite;
+
     }
 
     public void addPieces () {
@@ -70,6 +122,19 @@ public class Board extends JPanel {
             for (int c = 0; c < cols; c++) {
                 g2d.setColor((c+r)%2==0 ? new Color(93, 114, 176) : new Color(7, 47, 124));
                 g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+            }
+
+
+        if (selectedPiece != null)
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++) {
+
+                if (isValidMove(new Move(this, selectedPiece, c, r))) {
+
+                    g2d.setColor(new Color(42, 134, 33, 190));
+                    g2d.fillRect(c * tileSize, r * tileSize, tileSize, tileSize);
+                }
+
             }
 
         for (Piece piece : pieceList) {
