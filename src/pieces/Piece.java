@@ -36,6 +36,14 @@ public class Piece {
 
     }
 
+    public boolean isValidMovement(int col, int row) {
+        return true;
+    }
+
+    public boolean moveCollideWithPiece(int col, int row) {
+        return false;
+    }
+
     public void paint(Graphics2D g2d) {
         g2d.drawImage(sprite, xPos, yPos, null);
     }
